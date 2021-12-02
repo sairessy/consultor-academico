@@ -37,12 +37,12 @@ export default function Home({ screenId, goToScreen }) {
 						users.map(u => (
 							<Consultor
 								key={u._id} fullName={u.fullName} course={u.course} institution={u.institution} zone={u.zone}
-								contact={u.phoneNumber} disciplinas={u.disciplinas}
+								contact={u.phoneNumber} disciplinas={u.disciplinas} img={u.img}
 							/>
 						)) : null
 					}
 
-					<Button
+					{/* <Button
 						mode='contained'
 						icon='plus'
 						labelStyle={{ textTransform: 'capitalize', }}
@@ -53,7 +53,7 @@ export default function Home({ screenId, goToScreen }) {
 						onPress={() => { }}
 					>
 						Consultores
-					</Button>
+					</Button> */}
 
 				</ScrollView>
 				<Sidebar show={showSidebar} goToScreen={goToScreen} toggleSidebar={toggleSidebar} />

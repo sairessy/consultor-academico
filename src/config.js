@@ -1,6 +1,7 @@
 ﻿const CONFIG = {
 	title: 'Consultor Académico',
 	server: 'https://consultor-academico.herokuapp.com',
+	// server: 'http://localhost:3000',
 	colors: {
 		primary: '#4b0082'
 	},
@@ -21,6 +22,7 @@
 		{ id: 3, label: 'Alto Maé' },
 		{ id: 4, label: 'Zimpeto' },
 		{ id: 5, label: 'Baixa' },
+		{ id: 6, label: 'Malhangalene' }
 	],
 	disciplinas: [
 		{ id: 0, label: 'Análise Matemática II' },

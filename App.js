@@ -1,8 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
+// import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+
+import firebase from './src/firebase';
 
 // Screens
 import Home from './src/screens/Home';
@@ -20,7 +22,7 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1, paddingTop: Constants.statusbarHeight }}>
+    <View style={{ flex: 1, paddingTop: StatusBar.currentHeight }}>
       {screenId == 0 ? <Home goToScreen={goToScreen} screenId={screenId} /> : null}
       <Login goToScreen={goToScreen} screenId={screenId} />
       <SignUp goToScreen={goToScreen} screenId={screenId} />

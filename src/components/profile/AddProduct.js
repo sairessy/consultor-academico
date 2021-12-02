@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Picker } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -10,8 +9,10 @@ export default function AddProduct({ toggleAddPopup, getUserInfo }) {
 
 	const [disciplina, setDisciplina] = useState('0');
 	const [percent, setPercent] = useState('0');
+	const [loading, setLoading] = useState(false);
 
 	const addProduct = async () => {
+		setLoading(true);
 		const data = { disciplina, percent, tokken: await AsyncStorage.getItem('tokken') };
 		const response = await fetch(CONFIG.server + '/addproduct', {
 			method: 'POST',
@@ -22,6 +23,8 @@ export default function AddProduct({ toggleAddPopup, getUserInfo }) {
 		});
 
 		const json = await response.json();
+
+		setLoading(false);
 
 		if (json.success) {
 			getUserInfo();
@@ -61,7 +64,7 @@ export default function AddProduct({ toggleAddPopup, getUserInfo }) {
 
 			<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
 				style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
-				onPress={() => addProduct()}
+				onPress={() => addProduct()} loading={loading}
 			>
 				Adicionar
 			</Button>

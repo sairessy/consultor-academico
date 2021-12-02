@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, Modal } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Modal, Image } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { IconButton } from 'react-native-paper';
 import Disciplina from '../components/profile/Disciplina';
@@ -51,6 +50,12 @@ export default function Profile({ screenId, goToScreen }) {
 	if (screenId != 3) {
 		return null;
 	} else {
+		let userImage = '';
+		if (consultorInfo != null) {
+			if (consultorInfo.img.name != '') {
+				userImage = consultorInfo.img.url;
+			}
+		}
 		return (
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
 				<View style={{
@@ -61,7 +66,7 @@ export default function Profile({ screenId, goToScreen }) {
 						onPress={() => goToScreen(0)}
 					/>
 					<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', position: 'absolute', top: 0, right: 0 }}>
-						<IconButton icon='plus' color='#ddd' size={20} style={{ margin: 5 }}
+						<IconButton icon='plus' color='#fff' size={20} style={{ margin: 5 }}
 							onPress={() => toggleAddPopup()}
 						/>
 						<IconButton icon='pen' color='#ddd' size={20} style={{ margin: 5 }}
@@ -71,8 +76,11 @@ export default function Profile({ screenId, goToScreen }) {
 							onPress={() => logout()}
 						/>
 					</View>
-					<View style={{ backgroundColor: '#aaa', borderRadius: 5, width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-						<Ionicons name='person' color='#eee' size={15} />
+					<View style={{ borderRadius: 5, width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
+						{userImage == '' ?
+							<Ionicons name='person' color='#eee' size={15} /> :
+							<Image source={{ uri: userImage }} style={{ width: 50, height: 50, borderRadius: 5 }} />
+						}
 					</View>
 					<Text style={{ color: '#fff', marginTop: 10, textTransform: 'capitalize' }}>{consultorInfo != null ? consultorInfo.fullName : ''}
 					</Text>

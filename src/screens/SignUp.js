@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,8 +9,10 @@ export default function SignUp({ goToScreen, screenId }) {
 	const [email, setEmail] = useState('');
 	const [pass, setPass] = useState('');
 	const [cPass, setCPass] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const signup = async () => {
+		setLoading(true);
 		const user = {
 			email,
 			pass,
@@ -25,6 +26,7 @@ export default function SignUp({ goToScreen, screenId }) {
 		};
 
 		if (pass !== cPass) {
+			setLoading(false);
 			alert('As senhas não coincidem!');
 			return;
 		}
@@ -38,6 +40,7 @@ export default function SignUp({ goToScreen, screenId }) {
 		});
 
 		const json = await response.json();
+		setLoading(false);
 		alert('Cadastrado com successo, faça login!');
 		goToScreen(1);
 	}
@@ -64,7 +67,7 @@ export default function SignUp({ goToScreen, screenId }) {
 					<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={cPass} mode='outlined' placeholder='Senha' label='Introduza novamente a senha' secureTextEntry={true} onChangeText={text => setCPass(text)} />
 					<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
 						style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
-						onPress={() => signup()}
+						onPress={() => signup()} loading={loading}
 					>
 						Cadastrar
 					</Button>

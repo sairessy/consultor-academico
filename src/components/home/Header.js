@@ -1,12 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Checkbox, IconButton } from 'react-native-paper';
 import Logo from '../Logo';
 import CONFIG from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState } from 'react/cjs/react.development';
 
 export default function Header({ goToScreen, toggleSidebar, show }) {
   const [tokken, setTokken] = useState(null);
@@ -37,14 +35,14 @@ export default function Header({ goToScreen, toggleSidebar, show }) {
         </View>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Ionicons name={tokken == null ? 'log-in' : 'person'} size={25} color='#fff'
+        <Ionicons name={tokken == null ? 'log-in' : 'person'} size={tokken == null ? 25 : 20} color='#fff'
           style={{ marginRight: 5 }}
           onPress={() => navigate()}
         />
 
-        <MaterialIcons name='more-vert' size={20} color='#ddd'
+        {/* <MaterialIcons name='more-vert' size={20} color='#ddd'
           style={{ marginRight: 5 }}
-        />
+        /> */}
       </View>
     </View>
   );

@@ -1,8 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Picker, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Button, IconButton, TextInput } from 'react-native-paper';
+
+import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -19,9 +20,31 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 	const [level, setLevel] = useState('0');
 	const [img, setImg] = useState({ url: '', name: '' });
 	const [newImg, setNewImg] = useState({});
+	const [updating, setUpdating] = useState(false);
 
 	const [imgBlob, setImgBlob] = useState('');
 	const [imgUri, setImgUri] = useState('');
+	const [imgName, setImgName] = useState('');
+	const [uploadState, setUploadState] = useState(0);
+
+	const deleteOldPhoto = async () => {
+		const storage = getStorage();
+
+		if (img.name != '') {
+			// Create a reference to the file to delete
+			const desertRef = ref(storage, 'photos/' + img.name);
+
+			// Delete the file
+			deleteObject(desertRef).then(() => {
+				console.log('Old file deleted!');
+			}).catch((error) => {
+				console.log('Delete old file fail!');
+				console.error(error);
+			});
+		} else {
+			console.log('Nothing to delete!');
+		}
+	}
 
 	const displayPhoto = async () => {
 		const accepted = ['png', 'jpg', 'jpeg'];
@@ -33,12 +56,16 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 			const response = await fetch(uri);
 			const blob = await response.blob();
 			const ext = blob.type.split('/')[1];
+
 			if (!accepted.includes(ext)) {
 				alert('A extensão do ficheiro não é suportada!');
+				return;
 			}
-			console.log(blob)
+
+			const imgName = Date.now() + '.' + ext;
 			setImgBlob(blob);
 			setImgUri(uri);
+			setImgName(imgName);
 		}
 	}
 
@@ -54,6 +81,7 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 
 		const json = await response.json();
 		const user = json[0];
+		console.log(user);
 
 		setFullName(user.fullName);
 		setCourse(user.course);
@@ -62,9 +90,15 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 		setZone(user.zone);
 		setInstitution(user.institution);
 		setLevel(user.level);
+		setImg(user.img);
 	}
 
 	const updateProfile = async () => {
+		setUpdating(true);
+		if (imgUri != '') {
+			upl();
+		}
+
 		const data = {
 			fullName,
 			course,
@@ -87,15 +121,59 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 
 		const json = await response.json();
 
+		setUpdating(false);
+
 		if (json.success) {
-			// _getUserInfo();
 			alert('Perfil actualizado!');
 		}
 
 	}
 
-	const uploadPhoto = () => {
+	const upl = async () => {
+		const storage = getStorage();
+		const storageRef = ref(storage, 'photos/' + imgName);
+		const metadata = {
+			contentType: 'image/jpeg',
+		};
 
+		await deleteOldPhoto();
+
+		const uploadTask = uploadBytesResumable(storageRef, imgBlob, metadata);
+		uploadTask.on('state_changed',
+			(snapshot) => {
+				// Observe state change events such as progress, pause, and resume
+				// Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+				const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				setUploadState(progress);
+				console.log('Upload is ' + progress + '% done');
+				switch (snapshot.state) {
+					case 'paused':
+						console.log('Upload is paused');
+						break;
+					case 'running':
+						console.log('Upload is running');
+						break;
+				}
+			},
+			(error) => {
+				// Handle unsuccessful uploads
+			},
+			() => {
+				// Handle successful uploads on complete
+				// For instance, get the download URL: https://firebasestorage.googleapis.com/...
+				getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+					const photo = { name: imgName, url: downloadURL };
+
+					const response = await fetch(CONFIG.server + '/updatephoto', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({ ...photo, tokken: await AsyncStorage.getItem('tokken') })
+					});
+				});
+			}
+		);
 	}
 
 	useEffect(() => {
@@ -104,7 +182,7 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 
 	return (
 		<View style={{ flex: 1 }}>
-
+			<View style={{ height: 5, padding: 10, backgroundColor: '#2bccb1', width: uploadState, display: (uploadState != 100 && uploadState > 0) ? 'flex' : 'none' }}></View>
 			<TouchableOpacity
 				onPress={() => displayPhoto()}
 				style={{
@@ -115,10 +193,10 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 					onPress={() => toggleUpdateProfilePopup()}
 				/>
 
-				<View style={{ backgroundColor: '#aaa', borderRadius: '100%', width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
+				<View style={{ borderRadius: '100%', width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
 					{imgUri == '' ?
 						<Ionicons name='person' color='#eee' size={15} /> :
-						<Image source={{ uri: imgUri }} style={{ width: 50, height: 50 }} />
+						<Image source={{ uri: imgUri }} style={{ width: 50, height: 50, borderRadius: '100%' }} />
 					}
 				</View>
 			</TouchableOpacity>
@@ -175,6 +253,7 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 				<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
 					style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
 					onPress={() => updateProfile()}
+					loading={updating}
 				>
 					Actualizar
 				</Button>

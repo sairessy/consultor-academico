@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,8 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Login({ goToScreen, screenId }) {
 	const [email, setEmail] = useState('');
 	const [pass, setPass] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const login = async () => {
+		setLoading(true);
 		const user = { email, pass };
 
 		const response = await fetch(CONFIG.server + '/login', {
@@ -24,12 +25,15 @@ export default function Login({ goToScreen, screenId }) {
 
 		const json = await response.json();
 
+		setLoading(false);
+
 		if (json.length > 0) {
 			await AsyncStorage.setItem('tokken', json[0]._id);
 			goToScreen(3);
 		} else {
 			alert('Email ou senha inválida!')
 		}
+
 	}
 
 	if (screenId != 1) {
@@ -50,7 +54,7 @@ export default function Login({ goToScreen, screenId }) {
 					<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={pass} mode='outlined' placeholder='Senha' label='Introduza a senha' secureTextEntry={true} onChangeText={text => setPass(text)} />
 					<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
 						style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
-						onPress={() => login()}
+						onPress={() => login()} loading={loading}
 					>
 						Entrar
 					</Button>

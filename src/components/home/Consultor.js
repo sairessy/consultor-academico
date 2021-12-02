@@ -1,13 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Alert, Linking, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, Linking, StyleSheet, Text, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Button, IconButton } from 'react-native-paper';
 import CONFIG from '../../config';
 
 import * as Clipboard from 'expo-clipboard';
 
-export default function Consultor({ fullName, course, zone, institution, contact, disciplinas }) {
+export default function Consultor({ fullName, course, zone, institution, contact, disciplinas, img }) {
   const openWhatsApp = async () => {
     const url = 'https://wa.me/+258' + contact;
     Linking.openURL(url);
@@ -38,9 +37,12 @@ export default function Consultor({ fullName, course, zone, institution, contact
   }
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10, padding: 10, borderRadius: 5, borderWidth: 1, borderColor: '#fff' }}>
-      <View style={{ flexDirection: 'row' }}>
-        <Ionicons name='person-circle' size={40} color='#ddd' />
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, margin: 10, borderRadius: 5, borderWidth: 1, borderColor: '#fff' }}>
+      <View style={{ flexDirection: 'row', width: 50, height: 50 }}>
+        {img.url == '' ?
+          <Ionicons name='person-circle' size={40} color='#ddd' /> :
+          <Image source={{ uri: img.url }} style={{ width: 40, height: 40, borderRadius: '100%', backgroundColor: '#ddd' }} />
+        }
       </View>
       <View style={{ backgroundColor: '#fff', flex: 1, padding: 5, borderRadius: 5 }}>
         <Text>{fullName}</Text>

@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -69,7 +68,7 @@ export default function PasswordRecovery({ goToScreen, screenId }) {
 							/>
 						</View>
 
-						<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={confCode} activeOutlineColor={CONFIG.colors.primary}
+						<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={confCode}
 							mode='outlined' placeholder='Código de confirmação'
 							label='Introduza o código de confirmação' onChangeText={text => setConfCode(text)} />
 
