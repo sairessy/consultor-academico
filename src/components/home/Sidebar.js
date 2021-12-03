@@ -42,7 +42,7 @@ export default function Header({ goToScreen, show, toggleSidebar }) {
 				flex: 1, height: '100%',
 				borderLeftWidth: 1,
 				borderLeftColor: '#eee',
-				width: '85%', backgroundColor: '#fff', position: 'absolute',
+				width: '87%', backgroundColor: '#fff', position: 'absolute',
 				top: 0, right: 0
 			}}
 			>

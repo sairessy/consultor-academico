@@ -66,12 +66,12 @@ export default function Login({ goToScreen, screenId }) {
 						Cadastrar
 					</Button>
 
-					{/* <Button labelStyle={{ textTransform: 'capitalize', color: CONFIG.colors.primary }}
+					<Button labelStyle={{ textTransform: 'capitalize', color: CONFIG.colors.primary }}
 						style={{}}
 						onPress={() => goToScreen(4)}
 					>
 						Recuperar senha
-					</Button> */}
+					</Button>
 
 				</View>
 			</View>

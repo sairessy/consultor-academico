@@ -19,6 +19,7 @@ export default function Profile({ screenId, goToScreen }) {
 	}
 
 	const toggleUpdateProfilePopup = () => {
+		getUserInfo();
 		setShowUpdateProfilePopup(!showUpdateProfilePopup);
 	}
 

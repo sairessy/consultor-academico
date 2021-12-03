@@ -12,6 +12,10 @@ export default function Consultor({ fullName, course, zone, institution, contact
     Linking.openURL(url);
   }
 
+  const showUserDetails = async => {
+    alert('Em desenvolvimento!');
+  }
+
   const copyNumber = async () => {
     try {
       Clipboard.setString(contact);
@@ -38,10 +42,10 @@ export default function Consultor({ fullName, course, zone, institution, contact
 
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, margin: 10, borderRadius: 5, borderWidth: 1, borderColor: '#fff' }}>
-      <View style={{ flexDirection: 'row', width: 50, height: 50 }}>
+      <View style={{ flexDirection: 'row', width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}>
         {img.url == '' ?
           <Ionicons name='person-circle' size={40} color='#ddd' /> :
-          <Image source={{ uri: img.url }} style={{ width: 40, height: 40, borderRadius: '100%', backgroundColor: '#ddd' }} />
+          <Image source={{ uri: img.url }} style={{ width: 40, height: 40, borderRadius: '100%' }} />
         }
       </View>
       <View style={{ backgroundColor: '#fff', flex: 1, padding: 5, borderRadius: 5 }}>
@@ -65,9 +69,11 @@ export default function Consultor({ fullName, course, zone, institution, contact
           ))}
         </View>
       </View>
-      {/* <View>
-        <MaterialIcons name='chevron-right' color='#666' size={20} />
-      </View> */}
+      <View style={{ justifyContent: 'center' }}>
+        <MaterialIcons name='chevron-right' color='#666' size={20}
+          onPress={() => showUserDetails()}
+        />
+      </View>
     </View>
   );
 }

@@ -14,16 +14,51 @@ export default function PasswordRecovery({ goToScreen, screenId }) {
 
 	const [showModal, setShowModal] = useState(false);
 
-	const openModal = () => {
-		if (pass === cPass) {
+	const openModal = async () => {
+		if (pass != cPass) {
+			alert('As senhas que introduziu não coincidem!');
+			return;
+		}
+
+		const response = await fetch(CONFIG.server + '/sendrecoverycode', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ email })
+		});
+
+		const json = await response.json();
+
+		if (json.success) {
+			setCodeSent(json.codeSent);
+			alert('Enviamos o código de confirmação para o seu email (' + email + ')!');
 			setShowModal(true);
 		} else {
-			alert('As senhas que introduziu não coincidem!');
+			alert('Ocorreu um erro ao enviar o email, tente novamente!');
 		}
 	}
 
-	const recoveryPassword = () => {
-		console.log(confCode);
+	const recoveryPassword = async () => {
+		if (confCode == codeSent) {
+			const response = await fetch(CONFIG.server + '/recoverypassword', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ email, pass })
+			});
+
+			const json = await response.json();
+
+			if (json.success) {
+				alert('Senha redefinida com successo!');
+				goToScreen(1);
+			}
+		} else {
+			alert('O código de confirmação é incorrecto!');
+		}
+
 		setShowModal(false);
 	}
 
