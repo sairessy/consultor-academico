@@ -31,7 +31,7 @@ export default function Login({ goToScreen, screenId }) {
 			await AsyncStorage.setItem('tokken', json[0]._id);
 			goToScreen(3);
 		} else {
-			alert('Email ou senha inválida!')
+			alert('Email ou senha inválida!');
 		}
 
 	}
@@ -53,8 +53,8 @@ export default function Login({ goToScreen, screenId }) {
 					<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff', borderColor: CONFIG.colors.primary }} value={email} mode='outlined' placeholder='Email' label='Introduza o email' onChangeText={text => setEmail(text)} />
 					<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={pass} mode='outlined' placeholder='Senha' label='Introduza a senha' secureTextEntry={true} onChangeText={text => setPass(text)} />
 					<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
-						style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
-						onPress={() => login()} loading={loading}
+						style={{ marginTop: 10, backgroundColor: loading ? '#ccc' : CONFIG.colors.primary }}
+						onPress={() => login()} loading={loading} disabled={loading}
 					>
 						Entrar
 					</Button>

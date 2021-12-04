@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Picker } from 'react-native';
+import { StyleSheet, Text, View, Picker, StatusBar } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Button, IconButton } from 'react-native-paper';
 import CONFIG from '../../config';
@@ -33,7 +33,7 @@ export default function AddProduct({ toggleAddPopup, getUserInfo }) {
 	}
 
 	return (
-		<View style={{ padding: 5 }}>
+		<View style={{ padding: 5, paddingTop: StatusBar.currentHeight }}>
 			<View>
 				<Ionicons name='arrow-back' size={20} style={{ margin: 5 }}
 					onPress={() => toggleAddPopup()}
@@ -63,8 +63,8 @@ export default function AddProduct({ toggleAddPopup, getUserInfo }) {
 			</Picker>
 
 			<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
-				style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
-				onPress={() => addProduct()} loading={loading}
+				style={{ marginTop: 10, backgroundColor: loading ? '#ccc' : CONFIG.colors.primary }}
+				onPress={() => addProduct()} loading={loading} disabled={loading}
 			>
 				Adicionar
 			</Button>

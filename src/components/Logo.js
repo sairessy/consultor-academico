@@ -8,7 +8,7 @@ export default function Logo({ justify, textColor }) {
 			<Image style={{ width: 25, height: 25, marginRight: 10 }}
 				source={require('../../assets/icon.png')}
 			/>
-			<Text style={{ color: textColor != undefined ? textColor : '#000' }}>{CONFIG.title}</Text>
+			<Text style={{ color: textColor != undefined ? textColor : '#000', fontFamily: 'Title' }}>{CONFIG.title}</Text>
 		</View>
 	);
 }

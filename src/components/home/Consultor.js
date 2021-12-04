@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Image, Linking, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Button, IconButton } from 'react-native-paper';
 import CONFIG from '../../config';
@@ -13,7 +13,7 @@ export default function Consultor({ fullName, course, zone, institution, contact
   }
 
   const showUserDetails = async => {
-    alert('Em desenvolvimento!');
+    // alert('Em desenvolvimento!');
   }
 
   const copyNumber = async () => {
@@ -70,9 +70,13 @@ export default function Consultor({ fullName, course, zone, institution, contact
         </View>
       </View>
       <View style={{ justifyContent: 'center' }}>
-        <MaterialIcons name='chevron-right' color='#666' size={20}
+        <TouchableOpacity
+          style={{ width: 30, height: 30, backgroundColor: '#eee', borderRadius: '100%', justifyContent: 'center', alignItems: 'center' }}
           onPress={() => showUserDetails()}
-        />
+        >
+          <MaterialIcons name='chevron-right' color={true ? CONFIG.colors.primary : '#666'} size={20} />
+        </TouchableOpacity>
+
       </View>
     </View>
   );

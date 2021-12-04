@@ -6,7 +6,7 @@
 		primary: '#4b0082'
 	},
 	courses: [
-		{ id: 0, label: 'Matemática' },
+		{ id: 0, label: 'Matemática', disciplinas: [0, 1] },
 		{ id: 1, label: 'Informática' },
 		{ id: 2, label: 'Estatística' },
 		{ id: 3, label: 'Ciências de Informação geográfica' },
@@ -22,13 +22,19 @@
 		{ id: 3, label: 'Alto Maé' },
 		{ id: 4, label: 'Zimpeto' },
 		{ id: 5, label: 'Baixa' },
-		{ id: 6, label: 'Malhangalene' }
+		{ id: 6, label: 'Malhangalene' },
+		{ id: 7, label: 'Hulene' }
+
 	],
 	disciplinas: [
-		{ id: 0, label: 'Análise Matemática II' },
+		{ id: 0, label: 'Análise Matemática' },
 		{ id: 1, label: 'Probabilidade e Estatística' },
 		{ id: 2, label: 'Estatística Básica' },
-		{ id: 3, label: 'Física I' }
+		{ id: 3, label: 'Matemática Discreta' },
+		{ id: 4, label: 'Programação' },
+		{ id: 5, label: 'Álgebra linear e geometria analítica' },
+		{ id: 6, label: 'Investigação operacional' },
+		{ id: 7, label: 'Matemática Básica' }
 	],
 	institutions: [
 		{ id: 0, label: 'UEM' },

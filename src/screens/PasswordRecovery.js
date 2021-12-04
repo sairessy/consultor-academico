@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Modal } from 'react-native';
+import { StyleSheet, Text, View, Modal, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, TextInput } from 'react-native-paper';
 import Logo from '../components/Logo';
@@ -11,12 +11,15 @@ export default function PasswordRecovery({ goToScreen, screenId }) {
 	const [cPass, setCPass] = useState('');
 	const [confCode, setConfCode] = useState('');
 	const [codeSent, setCodeSent] = useState('');
-
 	const [showModal, setShowModal] = useState(false);
+	const [loadingSendEmail, setLoadingSendEmail] = useState(false);
+	const [loadingConfCode, setLoadingConfCode] = useState(false);
 
 	const openModal = async () => {
+		setLoadingSendEmail(true);
 		if (pass != cPass) {
 			alert('As senhas que introduziu não coincidem!');
+			setLoadingSendEmail(false);
 			return;
 		}
 
@@ -33,13 +36,17 @@ export default function PasswordRecovery({ goToScreen, screenId }) {
 		if (json.success) {
 			setCodeSent(json.codeSent);
 			alert('Enviamos o código de confirmação para o seu email (' + email + ')!');
+			setLoadingSendEmail(false);
 			setShowModal(true);
 		} else {
 			alert('Ocorreu um erro ao enviar o email, tente novamente!');
 		}
+
+		setLoadingSendEmail(false);
 	}
 
 	const recoveryPassword = async () => {
+		setLoadingConfCode(true);
 		if (confCode == codeSent) {
 			const response = await fetch(CONFIG.server + '/recoverypassword', {
 				method: 'POST',
@@ -59,6 +66,7 @@ export default function PasswordRecovery({ goToScreen, screenId }) {
 			alert('O código de confirmação é incorrecto!');
 		}
 
+		setLoadingConfCode(false);
 		setShowModal(false);
 	}
 
@@ -80,8 +88,8 @@ export default function PasswordRecovery({ goToScreen, screenId }) {
 					<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={pass} mode='outlined' placeholder='Senha' label='Introduza a senha' secureTextEntry={true} onChangeText={text => setPass(text)} />
 					<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={cPass} mode='outlined' placeholder='Senha' label='Introduza novamente a senha' secureTextEntry={true} onChangeText={text => setCPass(text)} />
 					<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
-						style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
-						onPress={() => openModal()}
+						style={{ marginTop: 10, backgroundColor: loadingSendEmail ? '#ccc' : CONFIG.colors.primary }}
+						onPress={() => openModal()} loading={loadingSendEmail} disabled={loadingSendEmail}
 					>
 						Recuperar
 					</Button>
@@ -94,7 +102,7 @@ export default function PasswordRecovery({ goToScreen, screenId }) {
 					onRequestClose={() => {
 						setShowModal(!showModal);
 					}}
-					style={{ padding: 10 }}
+					style={{ padding: 10, paddingTop: StatusBar.currentHeight }}
 				>
 					<View style={{ padding: 5 }}>
 						<View>
@@ -108,8 +116,8 @@ export default function PasswordRecovery({ goToScreen, screenId }) {
 							label='Introduza o código de confirmação' onChangeText={text => setConfCode(text)} />
 
 						<Button labelStyle={{ textTransform: 'capitalize' }} mode='contained'
-							style={{ marginTop: 5, backgroundColor: CONFIG.colors.primary }}
-							onPress={() => recoveryPassword()}
+							style={{ marginTop: 5, backgroundColor: loadingConfCode ? '#ccc' : CONFIG.colors.primary }}
+							onPress={() => recoveryPassword()} loading={loadingConfCode} disabled={loadingConfCode}
 						>
 							Confirmar
 						</Button>

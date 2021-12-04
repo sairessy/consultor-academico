@@ -28,6 +28,13 @@ export default function SignUp({ goToScreen, screenId }) {
 		if (pass !== cPass) {
 			setLoading(false);
 			alert('As senhas não coincidem!');
+			setLoading(false);
+			return;
+		}
+
+		if (pass == '' || email == '') {
+			alert('Preencha todos os campos!');
+			setLoading(false);
 			return;
 		}
 
@@ -40,9 +47,15 @@ export default function SignUp({ goToScreen, screenId }) {
 		});
 
 		const json = await response.json();
+
+		if (json.success) {
+			alert('Cadastrado com successo, faça login!');
+			goToScreen(1);
+		} else {
+			alert(json.errorMsg);
+		}
+
 		setLoading(false);
-		alert('Cadastrado com successo, faça login!');
-		goToScreen(1);
 	}
 
 	useEffect(() => {
@@ -66,8 +79,8 @@ export default function SignUp({ goToScreen, screenId }) {
 					<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={pass} mode='outlined' placeholder='Senha' label='Introduza a senha' secureTextEntry={true} onChangeText={text => setPass(text)} />
 					<TextInput activeOutlineColor={CONFIG.colors.primary} style={{ backgroundColor: '#fff' }} value={cPass} mode='outlined' placeholder='Senha' label='Introduza novamente a senha' secureTextEntry={true} onChangeText={text => setCPass(text)} />
 					<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
-						style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
-						onPress={() => signup()} loading={loading}
+						style={{ marginTop: 10, backgroundColor: loading ? '#ccc' : CONFIG.colors.primary }}
+						onPress={() => signup()} loading={loading} disabled={loading}
 					>
 						Cadastrar
 					</Button>

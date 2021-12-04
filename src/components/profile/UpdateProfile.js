@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Picker, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, Picker, ScrollView, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Button, IconButton, TextInput } from 'react-native-paper';
 
@@ -21,11 +21,11 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 	const [img, setImg] = useState({ url: '', name: '' });
 	const [newImg, setNewImg] = useState({});
 	const [updating, setUpdating] = useState(false);
-
 	const [imgBlob, setImgBlob] = useState('');
 	const [imgUri, setImgUri] = useState('');
 	const [imgName, setImgName] = useState('');
 	const [uploadState, setUploadState] = useState(0);
+	const [loading, setLoading] = useState(false);
 
 	const deleteOldPhoto = async () => {
 		const storage = getStorage();
@@ -181,7 +181,7 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 	}, [])
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{ flex: 1, paddingTop: StatusBar.currentHeight }}>
 			<View style={{ height: 5, padding: 10, backgroundColor: '#2bccb1', width: uploadState, display: (uploadState != 100 && uploadState > 0) ? 'flex' : 'none' }}></View>
 			<TouchableOpacity
 				onPress={() => displayPhoto()}
@@ -251,9 +251,9 @@ export default function UpdateProfile({ toggleUpdateProfilePopup }) {
 				</Picker>
 
 				<Button mode='contained' labelStyle={{ textTransform: 'capitalize' }}
-					style={{ marginTop: 10, backgroundColor: CONFIG.colors.primary }}
+					style={{ marginTop: 10, backgroundColor: loading ? '#ccc' : CONFIG.colors.primary }}
 					onPress={() => updateProfile()}
-					loading={updating}
+					loading={updating} disabled={loading}
 				>
 					Actualizar
 				</Button>
